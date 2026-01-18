@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Customers - Dev Daimand Tool</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body{
+      background:#f2f5ff;
+    }
+
+    /* HEADER */
+    .header{
+      display:flex;
+      align-items:center;
+      padding:15px;
+      background:#1e3c72;
+      color:#fff;
+    }
+
+    .back{
+      font-size:20px;
+      margin-right:12px;
+      cursor:pointer;
+    }
+
+    .title{
+      font-size:18px;
+      font-weight:bold;
+    }
+
+    /* ADD CUSTOMER */
+    .container{
+      padding:15px;
+    }
+
+    input{
+      width:100%;
+      padding:14px;
+      border-radius:12px;
+      border:1px solid #ccc;
+      font-size:15px;
+      margin-bottom:10px;
+      outline:none;
+    }
+
+    .btn{
+      background:#4facfe;
+      color:#fff;
+      padding:14px;
+      border-radius:14px;
+      text-align:center;
+      font-size:16px;
+      font-weight:bold;
+      cursor:pointer;
+      margin-bottom:15px;
+    }
+
+    /* CUSTOMER LIST */
+    .customer{
+      background:#fff;
+      border-radius:14px;
+      padding:12px;
+      margin-bottom:12px;
+      box-shadow:0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    .row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    .name{
+      font-weight:bold;
+      font-size:16px;
+    }
+
+    .mobile{
+      font-size:13px;
+      opacity:0.7;
+    }
+
+    .due{
+      font-weight:bold;
+      color:#e74c3c;
+    }
+
+    .actions{
+      margin-top:8px;
+      display:flex;
+      gap:10px;
+    }
+
+    .pay{
+      color:#2ecc71;
+      font-size:13px;
+      cursor:pointer;
+    }
+
+    .delete{
+      color:#e74c3c;
+      font-size:13px;
+      cursor:pointer;
+    }
+
+    .empty{
+      text-align:center;
+      margin-top:30px;
+      opacity:0.7;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="back" onclick="history.back()">⬅</div>
+    <div class="title">Customers</div>
+  </div>
+
+  <!-- ADD CUSTOMER -->
+  <div class="container">
+
+    <input type="text" id="cname" placeholder="Customer Name">
+    <input type="number" id="cmobile" placeholder="Mobile Number">
+    <input type="number" id="cdue" placeholder="Opening Due Amount">
+
+    <div class="btn" onclick="addCustomer()">Add Customer</div>
+
+    <!-- CUSTOMER LIST -->
+    <div id="customerList"></div>
+
+  </div>
+
+  <script>
+    let customers = JSON.parse(localStorage.getItem("customers")) || [];
+    const list = document.getElementById("customerList");
+
+    function addCustomer(){
+      const name = document.getElementById("cname").value;
+      const mobile = document.getElementById("cmobile").value;
+      const due = document.getElementById("cdue").value || 0;
+
+      if(name === ""){
+        alert("Enter customer name");
+        return;
+      }
+
+      const customer = {
+        name: name,
+        mobile: mobile,
+        due: Number(due)
+      };
+
+      customers.push(customer);
+      localStorage.setItem("customers", JSON.stringify(customers));
+
+      document.getElementById("cname").value = "";
+      document.getElementById("cmobile").value = "";
+      document.getElementById("cdue").value = "";
+
+      loadCustomers();
+    }
+
+    function loadCustomers(){
+      list.innerHTML = "";
+
+      if(customers.length === 0){
+        list.innerHTML = "<div class='empty'>No customers added</div>";
+        return;
+      }
+
+      customers.forEach((c, i) => {
+        const div = document.createElement("div");
+        div.className = "customer";
+
+        div.innerHTML = `
+          <div class="row">
+            <div>
+              <div class="name">${c.name}</div>
+              <div class="mobile">${c.mobile || ""}</div>
+            </div>
+            <div class="due">Due: ${c.due}</div>
+          </div>
+
+          <div class="actions">
+            <div class="pay" onclick="addPayment(${i})">Add Payment</div>
+            <div class="delete" onclick="deleteCustomer(${i})">Delete</div>
+          </div>
+        `;
+
+        list.appendChild(div);
+      });
+    }
+
+    function addPayment(i){
+      let amt = prompt("Enter payment amount");
+      if(amt){
+        customers[i].due -= Number(amt);
+        if(customers[i].due < 0) customers[i].due = 0;
+        localStorage.setItem("customers", JSON.stringify(customers));
+        loadCustomers();
+      }
+    }
+
+    function deleteCustomer(i){
+      if(confirm("Delete this customer?")){
+        customers.splice(i,1);
+        localStorage.setItem("customers", JSON.stringify(customers));
+        loadCustomers();
+      }
+    }
+
+    loadCustomers();
+  </script>
+
+</body>
+</html>
