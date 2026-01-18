@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Settings - Dev Daimand Tool</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body{
+      background:#f2f5ff;
+    }
+
+    /* HEADER */
+    .header{
+      display:flex;
+      align-items:center;
+      padding:15px;
+      background:#1e3c72;
+      color:#fff;
+    }
+
+    .back{
+      font-size:20px;
+      margin-right:12px;
+      cursor:pointer;
+    }
+
+    .title{
+      font-size:18px;
+      font-weight:bold;
+    }
+
+    /* SETTINGS */
+    .container{
+      padding:15px;
+    }
+
+    .item{
+      background:#fff;
+      padding:15px;
+      border-radius:14px;
+      margin-bottom:12px;
+      box-shadow:0 2px 6px rgba(0,0,0,0.08);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      cursor:pointer;
+    }
+
+    .item span{
+      font-size:15px;
+      font-weight:bold;
+    }
+
+    .danger{
+      color:#e74c3c;
+      font-weight:bold;
+      text-align:center;
+      margin-top:20px;
+      cursor:pointer;
+    }
+
+    .info{
+      text-align:center;
+      margin-top:25px;
+      font-size:13px;
+      opacity:0.7;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="back" onclick="history.back()">⬅</div>
+    <div class="title">Settings</div>
+  </div>
+
+  <!-- SETTINGS LIST -->
+  <div class="container">
+
+    <div class="item" onclick="clearRecords()">
+      <span>Clear All Entries</span>
+      🗑️
+    </div>
+
+    <div class="item" onclick="clearCustomers()">
+      <span>Clear All Customers</span>
+      🗑️
+    </div>
+
+    <div class="item" onclick="aboutApp()">
+      <span>About App</span>
+      ℹ️
+    </div>
+
+    <div class="danger" onclick="logoutApp()">
+      Logout
+    </div>
+
+    <div class="info">
+      Dev Daimand Tool <br>
+      Version 1.0
+    </div>
+
+  </div>
+
+  <script>
+    function clearRecords(){
+      if(confirm("Clear all entries?")){
+        localStorage.removeItem("records");
+        alert("All entries cleared");
+      }
+    }
+
+    function clearCustomers(){
+      if(confirm("Clear all customers?")){
+        localStorage.removeItem("customers");
+        alert("All customers cleared");
+      }
+    }
+
+    function aboutApp(){
+      alert("Dev Daimand Tool\nSmart factory & hisab-kitab management app");
+    }
+
+    function logoutApp(){
+      alert("Logout successful");
+      window.location.href = "index.html";
+    }
+  </script>
+
+</body>
+</html>
